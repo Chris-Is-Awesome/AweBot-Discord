@@ -1,25 +1,23 @@
 {
-	"name": "awebot",
-	"version": "1.0.0",
-	"description": "Discord bot for my streaming Discord server",
-	"main": "index.js",
-	"scripts": {
-		"start": "node index.js"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/Chris-Is-Awesome/AweBot-Discord"
-	},
-	"author": "Chris is Awesome",
-	"license": "ISC",
-	"bugs": {
-		"url": "https://github.com/Chris-Is-Awesome/AweBot-Discord/issues"
-	},
-	"homepage": "https://github.com/Chris-Is-Awesome/AweBot-Discord#readme",
-	"dependencies": {
-		"discord.js": "^12.4.1",
-		"eslint": "^7.13.0",
-		"pokedex-promise-v2": "^3.2.0",
-		"request": "^2.81.0"
-	}
+  "name": "awebot_discord",
+  "version": "1.0.0",
+  "description": "Discord bot for myself because I'm cool like that :)",
+  "main": "index.js",
+  "dependencies": {
+    "discord.js": "^12.5.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Chris-Is-Awesome/AweBot-Discord.git"
+  },
+  "author": "Chris is Awesome",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Chris-Is-Awesome/AweBot-Discord/issues"
+  },
+  "homepage": "https://github.com/Chris-Is-Awesome/AweBot-Discord#readme"
 }
