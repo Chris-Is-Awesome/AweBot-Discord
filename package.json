@@ -1,0 +1,25 @@
+{
+	"name": "awebot",
+	"version": "1.0.0",
+	"description": "Discord bot for my streaming Discord server",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/Chris-Is-Awesome/AweBot-Discord"
+	},
+	"author": "Chris is Awesome",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Chris-Is-Awesome/AweBot-Discord/issues"
+	},
+	"homepage": "https://github.com/Chris-Is-Awesome/AweBot-Discord#readme",
+	"dependencies": {
+		"discord.js": "^12.4.1",
+		"eslint": "^7.13.0",
+		"pokedex-promise-v2": "^3.2.0",
+		"request": "^2.81.0"
+	}
+}
