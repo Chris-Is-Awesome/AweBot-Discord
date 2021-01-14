@@ -11,15 +11,9 @@ const streamAnnouncementsChannel = "777284448206061588";
 let streamAnnouncementMessageId = "";
 
 const twitchRoleId = "799058842990149652";
-const youtubeRoleId = "799058936548163596";
-const twitterRoleId = "799058956482773043";
-const githubRoleId = "799058913495744524";
 const multiplayerRoleId = "799059050125721618";
 
 const twitchEmoteId = "799061444767121428";
-const youtubeEmoteId = "799061462944579624";
-const twitterEmoteId = "799061478661423164";
-const githubEmoteId = "799061494183886879";
 const multiplayerEmoteId = "799070502551158804";
 
 // When bot becomes active
@@ -44,15 +38,6 @@ client.on("messageReactionAdd", async (reaction, user) => {
 		{
 			case twitchEmoteId:
 				role = twitchRoleId;
-				break;
-			case youtubeEmoteId:
-				role = youtubeRoleId;
-				break;
-			case twitterEmoteId:
-				role = twitterRoleId;
-				break;
-			case githubEmoteId:
-				role = githubRoleId;
 				break;
 			case multiplayerEmoteId:
 				role = multiplayerRoleId;
@@ -79,15 +64,6 @@ client.on("messageReactionRemove", async (reaction, user) => {
 		switch (reaction.emoji.id) {
 			case twitchEmoteId:
 				role = twitchRoleId;
-				break;
-			case youtubeEmoteId:
-				role = youtubeRoleId;
-				break;
-			case twitterEmoteId:
-				role = twitterRoleId;
-				break;
-			case githubEmoteId:
-				role = githubRoleId;
 				break;
 			case multiplayerEmoteId:
 				role = multiplayerRoleId;
