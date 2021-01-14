@@ -5,6 +5,10 @@ const client = new Discord.Client({ partials: ['MESSAGE', 'CHANNEL', 'REACTION',
 // Fields
 const guildId = "771506280531099649";
 const welcomeMessageId = "799054956740345896";
+const myUserId = "222533981747281921";
+
+const streamAnnouncementsChannel = "777284448206061588";
+let streamAnnouncementMessageId = "";
 
 const twitchRoleId = "799058842990149652";
 const youtubeRoleId = "799058936548163596";
@@ -95,6 +99,25 @@ client.on("messageReactionRemove", async (reaction, user) => {
 			console.log(`Removed role ${member.guild.roles.cache.get(role).name} from ${member.user.tag}`);
 		}
 	}
+})
+
+// When I go live
+client.on("presenceUpdate", (oldPresence, newPresence) => {
+	if (newPresence.user.id != myUserId || !newPresence.activities) return false;
+	newPresence.activities.forEach(activity => {
+		if (activity.type == "STREAMING") {
+			const channel = client.channels.cache.get(streamAnnouncementsChannel);
+			const output =
+				`📺 **Chris is Awesome** is now live on " + ${activity.name} + "! 📺\n"
+				"He is streaming **" + ${activity.details} + "**
+				" at " + ${activity.url}
+				\n@Twitch`;
+			channel.send(output).then(message => {
+				streamAnnouncementMessageId = message;
+			})
+			return true;
+		}
+	})
 })
 
 client.login(process.env.DJS_TOKEN);
