@@ -8,7 +8,6 @@ const welcomeMessageId = "799054956740345896";
 const myUserId = "222533981747281921";
 
 const streamAnnouncementsChannel = "777284448206061588";
-let streamAnnouncementMessageId = "";
 
 const twitchRoleId = "799058842990149652";
 const multiplayerRoleId = "799059050125721618";
@@ -78,22 +77,44 @@ client.on("messageReactionRemove", async (reaction, user) => {
 })
 
 // When I go live
+let streamAnnouncementMessage;
+let streamTitle;
 client.on("presenceUpdate", (oldPresence, newPresence) => {
-	if (newPresence.user.id != myUserId || !newPresence.activities) return false;
-	newPresence.activities.forEach(activity => {
-		if (activity.type == "STREAMING") {
-			const channel = client.channels.cache.get(streamAnnouncementsChannel);
-			const output =
-				`📺 **Chris is Awesome** is now live on " + ${activity.name} + "! 📺\n"
-				"He is streaming **" + ${activity.details} + "**
-				" at " + ${activity.url}
-				\n@Twitch`;
-			channel.send(output).then(message => {
-				streamAnnouncementMessageId = message;
-			})
-			return true;
-		}
-	})
+	if (newPresence.user.id != myUserId) return false;
+	// If currently doing something
+	if (newPresence.activities.length > 0)
+	{
+		newPresence.activities.forEach(activity => {
+			if (activity.type == "PLAYING") {
+				// Send message
+				if (!streamTitle) {
+					const channel = client.channels.cache.get(streamAnnouncementsChannel);
+					const output = `📺 **Chris is Awesome** is now live on ${activity.name}! 📺\nHe is streaming **${activity.details}** at ${activity.url} <@&${twitchRoleId}>`;
+					channel.send(output).then((message => {
+						streamAnnouncementMessage = message;
+					}))
+					streamTitle = activity.details;
+					return true;
+				}
+				else // Edit message
+				{
+					// If stream title changes
+					if (activity.details != streamTitle) {
+						const output = `📺 **Chris is Awesome** is now live on ${activity.name}! 📺\nHe is streaming **${activity.details}** at ${activity.url} <@&${twitchRoleId}>`;
+						streamAnnouncementMessage.edit(output);
+					}
+				}
+			}
+		})
+	}
+	else // If stream ended
+	{
+		const output =
+			`❌Chris is Awesome has stopped streaming. ❌\nHe was streaming **${streamTitle}**\nFeel free to watch the VOD either on Twitch or on YouTube the next day!`;
+		streamAnnouncementMessage.edit(output);
+		streamTitle = "";
+		streamAnnouncementMessage = null;
+	}
 })
 
 client.login(process.env.DJS_TOKEN);
