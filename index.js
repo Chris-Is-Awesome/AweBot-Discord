@@ -85,7 +85,7 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 	if (newPresence.activities.length > 0)
 	{
 		newPresence.activities.forEach(activity => {
-			if (activity.type == "PLAYING") {
+			if (activity.type == "STREAMING") {
 				// Send message
 				if (!streamTitle) {
 					const channel = client.channels.cache.get(streamAnnouncementsChannel);
