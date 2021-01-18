@@ -12,7 +12,7 @@ module.exports = (client, aliases, callback) => {
 			const command = `${prefix}${aliases}`;
 
 			if (content.startsWith(`${command} `) || content === command) {
-				console.log("Running the command " + `${command}`);
+				console.log("Running the command " + `${command} for user ${message.author.tag}`);
 				callback(message);
 			}
 		})
