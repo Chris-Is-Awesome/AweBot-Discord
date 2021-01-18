@@ -71,6 +71,7 @@ client.once("ready", () => {
 	client.user.setActivity("my servants 🐐", { type: "WATCHING" });
 
 	// Listen for commands
+	const ignoreCommandChance = 0.05;
 	commands(client, "ping", (message) => {
 		message.channel.send("Pong!");
 	})
@@ -81,39 +82,53 @@ client.once("ready", () => {
 		message.channel.send(`Invite to <#798737214862655488> https://discord.gg/p8SF3ptm6d`);
 	})
 	commands(client, "whoop", (message) => {
-		const outputs = [
-			"[Backwards long jumps out of existence and crashes your game...]",
-			"[Starts to go in, then backs out at last second...]",
-			"[Stays sideways at entrance to barn so I don't even attempt to enter...]",
-			"[Ignores your whoop...]",
-			"[Randomly gets triggered and attacks you...]",
-			"[Kicks you in the groin...]",
-			"[Eats grass just to mock you...]",
-			"[Sits down and grooms self...]"
-		];
+		const commandAuthor = `<@${message.author.id}>`;
 
-		const goatInRng = Math.random();
-		const goatInChance = 0.05;
+		if (Math.random() > ignoreCommandChance) {
+			const outputs = [
+				"[Backwards long jumps out of existence and crashes your game...]",
+				"[Starts to go in, then backs out at last second...]",
+				"[Stays sideways at entrance to barn so I don't even attempt to enter...]",
+				"[Ignores your whoop...]",
+				"[Randomly gets triggered and attacks you...]",
+				"[Kicks you in the groin...]",
+				"[Eats grass just to mock you...]",
+				"[Sits down and grooms self...]"
+			];
 
-		// If goat goes in
-		if (goatInRng <= goatInChance) {
-			message.channel.send("GOAT IN!");
-		}
-		// If goat is a Howard...
-		else {
-			const goatOutRng = Math.floor(Math.random() * outputs.length) + 1;
-			message.channel.send(outputs[goatOutRng - 1]);
+			const goatInRng = Math.random();
+			const goatInChance = 0.05;
+
+			// If goat goes in
+			if (goatInRng <= goatInChance) {
+				message.channel.send(commandAuthor + " GOAT IN!");
+			}
+			// If goat is a Howard...
+			else {
+				const goatOutRng = Math.floor(Math.random() * outputs.length) + 1;
+				message.channel.send(commandAuthor + " " + outputs[goatOutRng - 1]);
+			}
+		} else {
+			message.channel.send(commandAuthor + " [Howard has ignored your command...] ");
+			console.log(`hahaha get rekt ${message.author.tag}`);
 		}
 	})
 	commands(client, "bff", (message) => {
-		const keys = Object.keys(friends);
-		const game = keys[Math.floor(Math.random() * keys.length)];
-		const friend = friends[game][Math.floor(Math.random() * friends[game].length)];
-		let output = "Your new best friend is **" + friend + "** from *" + game + "* !";
-		if (game == "Legend of Zelda: Twilight Princess" && friend == "Howard") {
-			output = "Your new best friend is -- *Howard*, myself?! W-why this is such an honor to be appreciated so much! 😳"
+		const commandAuthor = `<@${message.author.id}>`;
+
+		if (Math.random() > ignoreCommandChance) {
+			const keys = Object.keys(friends);
+			const game = keys[Math.floor(Math.random() * keys.length)];
+			const friend = friends[game][Math.floor(Math.random() * friends[game].length)];
+			let output = "Your new best friend is **" + friend + "** from *" + game + "* !";
+			if (game == "Legend of Zelda: Twilight Princess" && friend == "Howard") {
+				output = "Your new best friend is -- **Howard**, myself?! W-why this is such an honor to be appreciated so much! 😳"
+			}
+			message.channel.send(commandAuthor + " " + output);
+		} else {
+			message.channel.send(commandAuthor + " [Howard has ignored your command...] ");
+			console.log(`hahaha get rekt ${message.author.tag}`);
 		}
-		message.channel.send(`<@${message.author.id}> ${output}`);
 	})
 })
 
