@@ -64,8 +64,8 @@ const friends = {
 // When bot becomes active
 client.once("ready", () => {
 	console.log("*enters the barn*");
-	const channel = client.channels.cache.get(devChannel);
-	channel.send("*Enters the barn* I was updated! owo");
+	//const channel = client.channels.cache.get(devChannel);
+	//channel.send("*Enters the barn* I was updated! owo");
 
 	// Set bot activity
 	client.user.setActivity("my servants 🐐", { type: "WATCHING" });
