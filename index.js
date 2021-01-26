@@ -93,7 +93,9 @@ client.once("ready", () => {
 				"[Randomly gets triggered and attacks you...]",
 				"[Kicks you in the groin...]",
 				"[Eats grass just to mock you...]",
-				"[Sits down and grooms self...]"
+				"[Sits down and grooms self...]",
+				"[Faces the wrong way...]",
+				"[Attempts to enter barn, but gets pushed out by other goats...",
 			];
 
 			const goatInRng = Math.random();
