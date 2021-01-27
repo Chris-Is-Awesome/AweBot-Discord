@@ -208,7 +208,7 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 					console.log("Stream started, announcement message was sent.");
 					return true;
 				}
-				else // Edit message
+				else// Edit message
 				{
 					// If stream title changes
 					if (activity.details != streamTitle) {
@@ -220,14 +220,14 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 			}
 		})
 	}
-	else // If stream ended
+	else if (oldPresence.activities.length > 0) // If stream ended
 	{
 		const output =
 			`❌Chris is Awesome has stopped streaming. ❌\nHe was streaming **${streamTitle}**\nFeel free to watch the VOD either on Twitch or on YouTube the next day!`;
 		streamAnnouncementMessage.edit(output);
 		streamTitle = "";
 		streamAnnouncementMessage = null;
-		console.log("Stream ended, announcement message was edited.")
+		console.log("Stream ended, announcement message was edited.");
 	}
 })
 
