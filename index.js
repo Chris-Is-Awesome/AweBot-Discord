@@ -189,7 +189,8 @@ client.on("messageReactionRemove", async (reaction, user) => {
 
 // When I go live
 let streamAnnouncementMessage;
-let streamTitle;
+let currStreamTitle;
+let streamTitles = [];
 client.on("presenceUpdate", (oldPresence, newPresence) => {
 	if (newPresence.user.id != myUserId) return false;
 	// If currently doing something
@@ -198,22 +199,25 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 		newPresence.activities.forEach(activity => {
 			if (activity.type == "STREAMING") {
 				// Send message
-				if (!streamTitle) {
+				if (!currStreamTitle) {
 					const channel = client.channels.cache.get(streamAnnouncementsChannel);
 					const output = `📺 **Chris is Awesome** is now live on ${activity.name}! 📺\nHe is streaming **${activity.details}** at ${activity.url} <@&${twitchRoleId}>`;
 					channel.send(output).then((message => {
 						streamAnnouncementMessage = message;
 					}))
-					streamTitle = activity.details;
+					currStreamTitle = activity.details;
+					streamTitles = streamTitles.push(currStreamTitle);
 					console.log("Stream started, announcement message was sent.");
 					return true;
 				}
 				else// Edit message
 				{
 					// If stream title changes
-					if (activity.details != streamTitle) {
+					if (activity.details != currStreamTitle) {
 						const output = `📺 **Chris is Awesome** is now live on ${activity.name}! 📺\nHe is streaming **${activity.details}** at ${activity.url} <@&${twitchRoleId}>`;
 						streamAnnouncementMessage.edit(output);
+						currStreamTitle = activity.details;
+						streamTitles = streamTitles.push(currStreamTitle);
 						console.log("Stream title updated, announcement message was edited.");
 					}
 				}
@@ -222,10 +226,20 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 	}
 	else if (streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺")) // If stream ended
 	{
-		const output =
-			`❌Chris is Awesome has stopped streaming. ❌\nHe was streaming **${streamTitle}**\nFeel free to watch the VOD either on Twitch or on YouTube the next day!`;
-		streamAnnouncementMessage.edit(output);
-		streamTitle = "";
+		const output2 = "He was streaming ";
+		const output3 = "Feel free to watch the VOD either on Twitch or on YouTube the next day!";
+		for (let i = 0; i < streamTitles.length; i++) {
+			output2 += "**" + streamTitles[i] + "**";
+
+			if (i + 1 == streamTitles.length) {
+				output2 += "\n";
+			} else {
+				output2 += " + ";
+			}
+		}
+		streamAnnouncementMessage.edit(output1 + output2 + "\n" + output3);
+		currStreamTitle = "";
+		streamTitles = [];
 		streamAnnouncementMessage = null;
 		console.log("Stream ended, announcement message was edited.");
 	}
