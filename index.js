@@ -199,7 +199,7 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 		newPresence.activities.forEach(activity => {
 			if (activity.type == "STREAMING") {
 				// Send message
-				if (!currStreamTitle) {
+				if (!currStreamTitle && streamAnnouncementMessage == null) {
 					const channel = client.channels.cache.get(streamAnnouncementsChannel);
 					const output = `📺 **Chris is Awesome** is now live on ${activity.name}! 📺\nHe is streaming **${activity.details}** at ${activity.url} <@&${twitchRoleId}>`;
 					channel.send(output).then((message => {
@@ -226,6 +226,7 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 	}
 	else if (streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺")) // If stream ended
 	{
+		const output1 = "❌ Chris is Awesome has stopped streaming. ❌";
 		const output2 = "He was streaming ";
 		const output3 = "Feel free to watch the VOD either on Twitch or on YouTube the next day!";
 		for (let i = 0; i < streamTitles.length; i++) {
