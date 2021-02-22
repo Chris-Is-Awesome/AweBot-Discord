@@ -229,8 +229,11 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 		const output1 = "❌ Chris is Awesome has stopped streaming. ❌";
 		const output2 = "He was streaming ";
 		const output3 = "Feel free to watch the VOD either on Twitch or on YouTube the next day!";
+		console.log("Stream titles: " + streamTitles.length);
 		for (let i = 0; i < streamTitles.length; i++) {
+			console.log("Attempting to add stream title " + streamTitles[i] + " to message...");
 			output2 += "**" + streamTitles[i] + "**";
+			console.log("Successfully added stream title " + streamTitles[i] + " to message!");
 
 			if (i + 1 == streamTitles.length) {
 				output2 += "\n";
@@ -238,11 +241,11 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 				output2 += " + ";
 			}
 		}
-		streamAnnouncementMessage.edit(output1 + output2 + "\n" + output3);
+		console.log("Stream ended, announcement message was edited.");
 		currStreamTitle = "";
 		streamTitles = [];
+		streamAnnouncementMessage.edit(output1 + output2 + output3);
 		streamAnnouncementMessage = null;
-		console.log("Stream ended, announcement message was edited.");
 	}
 })
 
