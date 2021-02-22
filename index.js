@@ -227,7 +227,7 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 	else if (streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺")) // If stream ended
 	{
 		const output1 = "❌ Chris is Awesome has stopped streaming. ❌";
-		const output2 = "He was streaming ";
+		let output2 = "He was streaming ";
 		const output3 = "Feel free to watch the VOD either on Twitch or on YouTube the next day!";
 		console.log("Stream titles: " + streamTitles.length);
 		for (let i = 0; i < streamTitles.length; i++) {
