@@ -187,6 +187,70 @@ client.on("messageReactionRemove", async (reaction, user) => {
 	}
 })
 
+let streamAnnouncementMessage;
+let currentStreamTitle;
+// When a user's presence changes
+client.on("presenceUpdate", (oldPresence, newPresence) => {
+	// If not me, return
+	if (newPresence.user.id != myUserId) return false;
+
+	// Check each activity's type
+	newPresence.activities.forEach(activity => {
+		// If streaming
+		//if (activity.type == "STREAMING") {
+		if (activity.type == "PLAYING") {
+			// If message has not been sent
+			if (streamAnnouncementMessage == null) {
+				// Send message
+				//const channel = client.channels.cache.get(streamAnnouncementsChannel);
+				const channel = client.channels.cache.get(devChannel);
+				//const output = `📺 ** Chris is Awesome ** is now live on ${ activity.name } ! 📺\nHe is streaming ** ${ activity.details }** at ${ activity.url } <@& ${ twitchRoleId }>`;
+				const output = `Playing ${activity.details} on ${activity.name}!`;
+				channel.send(output).then((message => {
+					streamAnnouncementMessage = message;
+				}))
+				currentStreamTitle = activity.details;
+				Console.Log("Stream started. Announcement message was sent successfully.");
+				return true;
+			}
+			// If message has been sent
+			else {
+				// If stream title is different from what was sent in original message
+				if (activity.details != currentStreamTitle) {
+					// Edit original message
+					//const output = `📺 **Chris is Awesome** is now live on ${activity.name}! 📺\nHe is streaming **${activity.details}** at ${activity.url} <@&${twitchRoleId}>`;
+					const output = `Playing ${activity.details} on ${activity.name}!`;
+					streamAnnouncementMessage.edit(output);
+					currentStreamTitle = activity.details;
+					Console.Log("Stream title changed. Announcement message was edited successfully.");
+				}
+			}
+		}
+		// If no longer streaming
+		//else if (streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺") && activity.type != "STREAMING") {
+		else if (streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("Playing") && activity.type != "STREAMING") {
+			output = ` ❌ Chris is Awesome has stopped streaming. ❌`;
+			output += `\nHe was streaming **${currentStreamTitle}**`;
+			streamAnnouncementMessage.edit(output);
+			currentStreamTitle = "";
+			streamAnnouncementMessage = null;
+			Console.Log("Stream ended. Announcement message was edited successfully.");
+		}
+	})
+
+	// If no longer streaming
+	//if (oldPresence.activities.length > 0 && streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺") && activities.length == 0) {
+	if (oldPresence.activities.length > 0 && streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("Playing") && activities.length == 0) {
+		output = ` ❌ Chris is Awesome has stopped streaming. ❌`;
+		output += `\nHe was streaming **${currentStreamTitle}**`;
+		streamAnnouncementMessage.edit(output);
+		currentStreamTitle = "";
+		streamAnnouncementMessage = null;
+		Console.Log("Stream ended. Announcement message was edited successfully.");
+	}
+})
+
+/*
 // When I go live
 let streamAnnouncementMessage;
 let currStreamTitle;
@@ -248,6 +312,7 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 		streamAnnouncementMessage = null;
 	}
 })
+*/
 
 // Login
 client.login(process.env.DJS_TOKEN);
