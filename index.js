@@ -210,7 +210,7 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 					streamAnnouncementMessage = message;
 				}))
 				currentStreamTitle = activity.details;
-				Console.Log("Stream started. Announcement message was sent successfully.");
+				console.Log("Stream started. Announcement message was sent successfully.");
 				return true;
 			}
 			// If message has been sent
@@ -222,7 +222,7 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 					const output = `Playing ${activity.details} on ${activity.name}!`;
 					streamAnnouncementMessage.edit(output);
 					currentStreamTitle = activity.details;
-					Console.Log("Stream title changed. Announcement message was edited successfully.");
+					console.Log("Stream title changed. Announcement message was edited successfully.");
 				}
 			}
 		}
@@ -234,7 +234,7 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 			streamAnnouncementMessage.edit(output);
 			currentStreamTitle = "";
 			streamAnnouncementMessage = null;
-			Console.Log("Stream ended. Announcement message was edited successfully.");
+			console.Log("Stream ended. Announcement message was edited successfully.");
 		}
 	})
 
@@ -246,7 +246,7 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 		streamAnnouncementMessage.edit(output);
 		currentStreamTitle = "";
 		streamAnnouncementMessage = null;
-		Console.Log("Stream ended. Announcement message was edited successfully.");
+		console.Log("Stream ended. Announcement message was edited successfully.");
 	}
 })
 
