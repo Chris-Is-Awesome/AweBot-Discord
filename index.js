@@ -188,7 +188,8 @@ client.on("messageReactionRemove", async (reaction, user) => {
 })
 
 let streamAnnouncementMessage;
-let currentStreamTitle;
+let currentGame;
+let gamesPlayed = [];
 // When a user's presence changes
 client.on("presenceUpdate", (oldPresence, newPresence) => {
 	// If not me, return
@@ -197,122 +198,69 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 	// Check each activity's type
 	newPresence.activities.forEach(activity => {
 		// If streaming
-		//if (activity.type == "STREAMING") {
-		if (activity.type == "PLAYING") {
+		if (activity.type == "STREAMING") {
 			// If message has not been sent
 			if (streamAnnouncementMessage == null) {
 				// Send message
-				//const channel = client.channels.cache.get(streamAnnouncementsChannel);
-				const channel = client.channels.cache.get(devChannel);
-				//const output = `📺 ** Chris is Awesome ** is now live on ${ activity.name } ! 📺\nHe is streaming ** ${ activity.details }** at ${ activity.url } <@& ${ twitchRoleId }>`;
-				const output = `Playing ${activity.details} on ${activity.name}!`;
+				const channel = client.channels.cache.get(streamAnnouncementsChannel);
+				const output = `📺 ** Chris is Awesome ** is now live on ${ activity.name } ! 📺\nHe is streaming ** ${ activity.details }** at ${ activity.url } <@& ${ twitchRoleId }>`;
 				channel.send(output).then((message => {
 					streamAnnouncementMessage = message;
 				}))
-				currentStreamTitle = activity.details;
-				console.Log("Stream started. Announcement message was sent successfully.");
+				currentGame = activity.state;
+				gamesPlayed.push(currentGame);
+				console.log("Started streaming '" + activity.details + "' playing '" + currentGame + "'. Announcement message was sent successfully.");
 				return true;
 			}
 			// If message has been sent
 			else {
 				// If stream title is different from what was sent in original message
-				if (activity.details != currentStreamTitle) {
+				if (activity.details != currentGame) {
 					// Edit original message
-					//const output = `📺 **Chris is Awesome** is now live on ${activity.name}! 📺\nHe is streaming **${activity.details}** at ${activity.url} <@&${twitchRoleId}>`;
-					const output = `Playing ${activity.details} on ${activity.name}!`;
+					const output = `📺 **Chris is Awesome** is now live on ${activity.name}! 📺\nHe is streaming **${activity.details}** at ${activity.url} <@&${twitchRoleId}>`;
 					streamAnnouncementMessage.edit(output);
-					currentStreamTitle = activity.details;
-					console.Log("Stream title changed. Announcement message was edited successfully.");
+					currentGame = activity.state;
+					gamesPlayed.push(currentGame);
+					console.log("Stream game changed to '" + currentGame + "' streaming '" + activity.details + "'. Announcement message was edited successfully.");
 				}
 			}
 		}
 		// If no longer streaming
-		//else if (streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺") && activity.type != "STREAMING") {
-		else if (streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("Playing") && activity.type != "STREAMING") {
+		else if (streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺") && activity.type != "STREAMING") {
+			// Edit original message
 			output = ` ❌ Chris is Awesome has stopped streaming. ❌`;
-			output += `\nHe was streaming **${currentStreamTitle}**`;
+			output += `\nHe was streaming `;
+			for (let i = 0; i < gamesPlayed.length; i++) {
+				output += `**${gamesPlayed[i]}**`;
+
+				if (i + 1 == gamesPlayed.length) {
+					output += "\n";
+				}
+				else {
+					output += " + ";
+				}
+			}
+			output += "The VOD is available on Twitch until next week and will be on YouTube soon.";
 			streamAnnouncementMessage.edit(output);
-			currentStreamTitle = "";
+			currentGame = "";
+			gamesPlayed = [];
 			streamAnnouncementMessage = null;
-			console.Log("Stream ended. Announcement message was edited successfully.");
+			console.log("Stream ended. Announcement message was edited successfully.");
 		}
 	})
 
 	// If no longer streaming
-	//if (oldPresence.activities.length > 0 && streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺") && activities.length == 0) {
-	if (oldPresence.activities.length > 0 && streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("Playing") && activities.length == 0) {
+	if (oldPresence.activities.length > 0 && streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺") && newPresence.activities.length == 0) {
+		// Edit original message
 		output = ` ❌ Chris is Awesome has stopped streaming. ❌`;
-		output += `\nHe was streaming **${currentStreamTitle}**`;
+		output += `\nHe was streaming **${currentGame}**`;
 		streamAnnouncementMessage.edit(output);
-		currentStreamTitle = "";
+		currentGame = "";
+		gamesPlayed = [];
 		streamAnnouncementMessage = null;
-		console.Log("Stream ended. Announcement message was edited successfully.");
+		console.log("Stream ended. Announcement message was edited successfully.");
 	}
 })
-
-/*
-// When I go live
-let streamAnnouncementMessage;
-let currStreamTitle;
-let streamTitles = [];
-client.on("presenceUpdate", (oldPresence, newPresence) => {
-	if (newPresence.user.id != myUserId) return false;
-	// If currently doing something
-	if (newPresence.activities.length > 0)
-	{
-		newPresence.activities.forEach(activity => {
-			if (activity.type == "STREAMING") {
-				// Send message
-				if (!currStreamTitle && streamAnnouncementMessage == null) {
-					const channel = client.channels.cache.get(streamAnnouncementsChannel);
-					const output = `📺 **Chris is Awesome** is now live on ${activity.name}! 📺\nHe is streaming **${activity.details}** at ${activity.url} <@&${twitchRoleId}>`;
-					channel.send(output).then((message => {
-						streamAnnouncementMessage = message;
-					}))
-					currStreamTitle = activity.details;
-					streamTitles = streamTitles.push(currStreamTitle);
-					console.log("Stream started, announcement message was sent.");
-					return true;
-				}
-				else// Edit message
-				{
-					// If stream title changes
-					if (activity.details != currStreamTitle) {
-						const output = `📺 **Chris is Awesome** is now live on ${activity.name}! 📺\nHe is streaming **${activity.details}** at ${activity.url} <@&${twitchRoleId}>`;
-						streamAnnouncementMessage.edit(output);
-						currStreamTitle = activity.details;
-						streamTitles = streamTitles.push(currStreamTitle);
-						console.log("Stream title updated, announcement message was edited.");
-					}
-				}
-			}
-		})
-	}
-	else if (streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺")) // If stream ended
-	{
-		const output1 = "❌ Chris is Awesome has stopped streaming. ❌";
-		let output2 = "He was streaming ";
-		const output3 = "Feel free to watch the VOD either on Twitch or on YouTube the next day!";
-		console.log("Stream titles: " + streamTitles.length);
-		for (let i = 0; i < streamTitles.length; i++) {
-			console.log("Attempting to add stream title " + streamTitles[i] + " to message...");
-			output2 += "**" + streamTitles[i] + "**";
-			console.log("Successfully added stream title " + streamTitles[i] + " to message!");
-
-			if (i + 1 == streamTitles.length) {
-				output2 += "\n";
-			} else {
-				output2 += " + ";
-			}
-		}
-		console.log("Stream ended, announcement message was edited.");
-		currStreamTitle = "";
-		streamTitles = [];
-		streamAnnouncementMessage.edit(output1 + output2 + output3);
-		streamAnnouncementMessage = null;
-	}
-})
-*/
 
 // Login
 client.login(process.env.DJS_TOKEN);
