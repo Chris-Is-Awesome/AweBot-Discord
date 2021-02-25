@@ -253,7 +253,18 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 	if (oldPresence.activities.length > 0 && streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺") && newPresence.activities.length == 0) {
 		// Edit original message
 		output = ` ❌ Chris is Awesome has stopped streaming. ❌`;
-		output += `\nHe was streaming **${currentGame}**`;
+		output += `\nHe was streaming `;
+		for (let i = 0; i < gamesPlayed.length; i++) {
+			output += `**${gamesPlayed[i]}**`;
+
+			if (i + 1 == gamesPlayed.length) {
+				output += "\n";
+			}
+			else {
+				output += " + ";
+			}
+		}
+		output += "The VOD is available on Twitch until next week and will be on YouTube soon.";
 		streamAnnouncementMessage.edit(output);
 		currentGame = "";
 		gamesPlayed = [];
