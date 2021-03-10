@@ -197,7 +197,7 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 			}
 			// If message has been sent
 			else {
-				// If stream title is different from what was sent in original message
+				// If stream game is different from what was sent in original message
 				if (activity.details != currentGame) {
 					// Edit original message
 					const output = `📺 **Chris is Awesome** is live on ${activity.name}! 📺\nHe is streaming **${activity.details}** at ${activity.url} <@&${twitchRoleId}>`;
@@ -207,28 +207,6 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 					console.log("Stream game changed to '" + currentGame + "' streaming '" + activity.details + "'. Announcement message was edited successfully.");
 				}
 			}
-		}
-		// If no longer streaming
-		else if (streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺") && activity.type != "STREAMING") {
-			// Edit original message
-			output = ` ❌ Chris is Awesome has stopped streaming ❌`;
-			output += `\nHe was streaming `;
-			for (let i = 0; i < gamesPlayed.length; i++) {
-				output += `**${gamesPlayed[i]}**`;
-
-				if (i + 1 == gamesPlayed.length) {
-					output += "\n";
-				}
-				else {
-					output += " + ";
-				}
-			}
-			output += "The VOD is available on Twitch until next week and will be on YouTube soon";
-			streamAnnouncementMessage.edit(output);
-			currentGame = "";
-			gamesPlayed = [];
-			streamAnnouncementMessage = null;
-			console.log("Stream ended. Announcement message was edited successfully.");
 		}
 	})
 
