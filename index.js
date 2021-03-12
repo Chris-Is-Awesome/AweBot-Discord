@@ -208,30 +208,29 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 				}
 			}
 		}
-	})
+		// If no longer streaming
+		else if (streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺") && activity.type != "STREAMING") {
+			// Edit original message
+			output = ` ❌ Chris is Awesome has stopped streaming ❌`;
+			output += `\nHe was streaming `;
+			for (let i = 0; i < gamesPlayed.length; i++) {
+				output += `**${gamesPlayed[i]}**`;
 
-	// If no longer streaming
-	if (oldPresence.activities.length > 0 && streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺") && newPresence.activities.length == 0) {
-		// Edit original message
-		output = ` ❌ Chris is Awesome has stopped streaming ❌`;
-		output += `\nHe was streaming `;
-		for (let i = 0; i < gamesPlayed.length; i++) {
-			output += `**${gamesPlayed[i]}**`;
-
-			if (i + 1 == gamesPlayed.length) {
-				output += "\n";
+				if (i + 1 == gamesPlayed.length) {
+					output += "\n";
+				}
+				else {
+					output += " + ";
+				}
 			}
-			else {
-				output += " + ";
-			}
+			output += "The VOD is available on Twitch until next week and will be on YouTube soon";
+			streamAnnouncementMessage.edit(output);
+			currentGame = "";
+			gamesPlayed = [];
+			streamAnnouncementMessage = null;
+			console.log("Stream ended. Announcement message was edited successfully.");
 		}
-		output += "The VOD is available on Twitch until next week and will be on YouTube soon";
-		streamAnnouncementMessage.edit(output);
-		currentGame = "";
-		gamesPlayed = [];
-		streamAnnouncementMessage = null;
-		console.log("Stream ended. Announcement message was edited successfully.");
-	}
+	})
 })
 
 // Login
