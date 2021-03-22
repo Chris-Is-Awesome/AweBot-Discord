@@ -172,7 +172,6 @@ client.on("messageReactionRemove", async (reaction, user) => {
 
 let streamAnnouncementMessage;
 let currentGame;
-let gamesPlayed = [];
 // When a user's presence changes
 client.on("presenceUpdate", (oldPresence, newPresence) => {
 	// If not me, return
@@ -191,7 +190,6 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 					streamAnnouncementMessage = message;
 				}))
 				currentGame = activity.state;
-				gamesPlayed.push(currentGame);
 				console.log("Started streaming '" + activity.details + "' playing '" + currentGame + "'. Announcement message was sent successfully.");
 				return true;
 			}
@@ -203,7 +201,6 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 					const output = `📺 **Chris is Awesome** is live on ${activity.name}! 📺\nHe is streaming **${activity.details}** at ${activity.url} <@&${twitchRoleId}>`;
 					streamAnnouncementMessage.edit(output);
 					currentGame = activity.state;
-					gamesPlayed.push(currentGame);
 					console.log("Stream game changed to '" + currentGame + "' streaming '" + activity.details + "'. Announcement message was edited successfully.");
 				}
 			}
@@ -211,22 +208,10 @@ client.on("presenceUpdate", (oldPresence, newPresence) => {
 		// If no longer streaming
 		else if (streamAnnouncementMessage != null && streamAnnouncementMessage.content.startsWith("📺") && activity.type != "STREAMING") {
 			// Edit original message
-			output = ` ❌ Chris is Awesome has stopped streaming ❌`;
-			output += `\nHe was streaming `;
-			for (let i = 0; i < gamesPlayed.length; i++) {
-				output += `**${gamesPlayed[i]}**`;
-
-				if (i + 1 == gamesPlayed.length) {
-					output += "\n";
-				}
-				else {
-					output += " + ";
-				}
-			}
+			output = ` ❌ Chris is Awesome has stopped streaming ❌\n`;
 			output += "The VOD is available on Twitch until next week and will be on YouTube soon";
 			streamAnnouncementMessage.edit(output);
 			currentGame = "";
-			gamesPlayed = [];
 			streamAnnouncementMessage = null;
 			console.log("Stream ended. Announcement message was edited successfully.");
 		}
